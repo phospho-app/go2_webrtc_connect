@@ -26,3 +26,4 @@ output.wav
 output_video.mp4
 
 build/
+uv.lock
