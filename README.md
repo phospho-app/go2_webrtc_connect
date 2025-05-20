@@ -17,7 +17,7 @@ git clone --recurse-submodules https://github.com/legion1581/go2_webrtc_connect.
 cd go2_webrtc_connect
 ```
 
-2. Install `portaudio19-dev`
+2. (Optional) Install `portaudio19-dev`. This is only used for sound capabilities for Go2 Pro and Edu.
 
 ```bash
 # On Linux
