@@ -4,8 +4,9 @@ import json
 import logging
 
 RECV_PORT = 10134  # Port where the devices will send the multicast responses
-MULTICAST_GROUP = '231.1.1.1'  # Multicast group IP address
+MULTICAST_GROUP = "231.1.1.1"  # Multicast group IP address
 MULTICAST_PORT = 10131  # Port to send multicast query to devices
+
 
 def discover_ip_sn(timeout=2):
     print("Discovering devices on the network...")
@@ -18,7 +19,7 @@ def discover_ip_sn(timeout=2):
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     # Bind the socket to the port
-    sock.bind(('', RECV_PORT))
+    sock.bind(("", RECV_PORT))
 
     # Tell the operating system to add the socket to the multicast group
     # on all interfaces.
@@ -27,9 +28,9 @@ def discover_ip_sn(timeout=2):
 
     # Send a multicast query to discover devices
     query_message = json.dumps({"name": "unitree_dapengche"})
-    
+
     try:
-        sock.sendto(query_message.encode('utf-8'), (MULTICAST_GROUP, MULTICAST_PORT))
+        sock.sendto(query_message.encode("utf-8"), (MULTICAST_GROUP, MULTICAST_PORT))
     except Exception as e:
         logging.error(f"Error sending multicast query: {e}")
         sock.close()
@@ -42,7 +43,7 @@ def discover_ip_sn(timeout=2):
         while True:
             # Receive the response from the device
             data, addr = sock.recvfrom(1024)
-            message = data.decode('utf-8')
+            message = data.decode("utf-8")
             # Convert the JSON message to a dictionary
             message_dict = json.loads(message)
             if "sn" in message_dict:
@@ -62,7 +63,8 @@ def discover_ip_sn(timeout=2):
 
     return serial_to_ip
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     print("Discovering devices on the network...")
     serial_to_ip = discover_ip_sn(timeout=3)
     print("\nDiscovered devices:")

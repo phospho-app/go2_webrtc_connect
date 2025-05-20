@@ -7,7 +7,14 @@ import logging
 import json
 import sys
 from Crypto.PublicKey import RSA
-from .encryption import aes_encrypt, generate_aes_key, rsa_encrypt, aes_decrypt, rsa_load_public_key
+from .encryption import (
+    aes_encrypt,
+    generate_aes_key,
+    rsa_encrypt,
+    aes_decrypt,
+    rsa_load_public_key,
+)
+
 
 def _calc_local_path_ending(data1):
     # Initialize an array of strings
@@ -17,7 +24,7 @@ def _calc_local_path_ending(data1):
     last_10_chars = data1[-10:]
 
     # Split the last 10 characters into chunks of size 2
-    chunked = [last_10_chars[i:i + 2] for i in range(0, len(last_10_chars), 2)]
+    chunked = [last_10_chars[i : i + 2] for i in range(0, len(last_10_chars), 2)]
 
     # Initialize an empty list to store indices
     arrayList = []
@@ -34,30 +41,31 @@ def _calc_local_path_ending(data1):
                 print(f"Character {second_char} not found in strArr.")
 
     # Convert arrayList to a string without separators
-    joinToString = ''.join(map(str, arrayList))
+    joinToString = "".join(map(str, arrayList))
 
     return joinToString
+
 
 def make_remote_request(path, body, token, method="GET"):
     # Constants
     APP_SIGN_SECRET = "XyvkwK45hp5PHfA8"
     UM_CHANNEL_KEY = "UMENG_CHANNEL"
     BASE_URL = "https://global-robot-api.unitree.com/"
-    
+
     # Current timestamp and nonce
     app_timestamp = str(int(round(time.time() * 1000)))
     app_nonce = hashlib.md5(app_timestamp.encode()).hexdigest()
-    
+
     # Generating app sign
     sign_str = f"{APP_SIGN_SECRET}{app_timestamp}{app_nonce}"
     app_sign = hashlib.md5(sign_str.encode()).hexdigest()
-    
+
     # Get system's timezone offset in seconds and convert it to hours and minutes
     timezone_offset = time.localtime().tm_gmtoff // 3600
     minutes_offset = abs(time.localtime().tm_gmtoff % 3600 // 60)
     sign = "+" if timezone_offset >= 0 else "-"
     app_timezone = f"GMT{sign}{abs(timezone_offset):02d}:{minutes_offset:02d}"
-    
+
     # Headers
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -75,12 +83,12 @@ def make_remote_request(path, body, token, method="GET"):
         "Token": token,
         "AppName": "Go2",
         "Host": "global-robot-api.unitree.com",
-        "User-Agent": "Mozilla/5.0 (Linux; Android 15; SM-S931B Build/AP3A.240905.015.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/127.0.6533.103 Mobile Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Linux; Android 15; SM-S931B Build/AP3A.240905.015.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/127.0.6533.103 Mobile Safari/537.36",
     }
-    
+
     # Full URL
     url = BASE_URL + path
-    
+
     if method.upper() == "GET":
         # Convert body dictionary to query parameters for GET request
         params = urllib.parse.urlencode(body)
@@ -92,6 +100,7 @@ def make_remote_request(path, body, token, method="GET"):
 
     # Return the response as JSON
     return response.json()
+
 
 def make_local_request(path, body=None, headers=None):
     try:
@@ -112,8 +121,11 @@ def make_local_request(path, body=None, headers=None):
         logging.error(f"An error occurred: {e}")
         return None
 
+
 # Function to send SDP to peer and receive the answer
-def send_sdp_to_remote_peer(serial: str, sdp: str, access_token: str, public_key: RSA.RsaKey) -> str:
+def send_sdp_to_remote_peer(
+    serial: str, sdp: str, access_token: str, public_key: RSA.RsaKey
+) -> str:
     logging.info("Sending SDP to Go2...")
     aes_key = generate_aes_key()
     path = "webrtc/connect"
@@ -121,18 +133,17 @@ def send_sdp_to_remote_peer(serial: str, sdp: str, access_token: str, public_key
         "sn": serial,
         "sk": rsa_encrypt(aes_key, public_key),
         "data": aes_encrypt(sdp, aes_key),
-        "timeout": 5
+        "timeout": 5,
     }
     response = make_remote_request(path, body, token=access_token, method="POST")
     if response.get("code") == 100:
         logging.info("Received SDP Answer from Go2!")
-        return aes_decrypt(response['data'], aes_key)
+        return aes_decrypt(response["data"], aes_key)
     elif response.get("code") == 1000:
         print("Device not online")
         sys.exit(1)
     else:
         raise ValueError(f"Failed to receive SDP Answer: {response}")
-    
 
 
 def send_sdp_to_local_peer(ip, sdp):
@@ -166,11 +177,11 @@ def send_sdp_to_local_peer(ip, sdp):
 def send_sdp_to_local_peer_old_method(ip, sdp):
     """
     Sends an SDP message to a local peer using an HTTP POST request.
-    
+
     Args:
         ip (str): The IP address of the local peer to send the SDP message.
         sdp (dict): The SDP message to be sent in the request body.
-        
+
     Returns:
         response: The response from the local peer if the request is successful, otherwise None.
     """
@@ -179,22 +190,25 @@ def send_sdp_to_local_peer_old_method(ip, sdp):
         url = f"http://{ip}:8081/offer"
 
         # Define headers for the POST request
-        headers = {'Content-Type': 'application/json'}
-        
+        headers = {"Content-Type": "application/json"}
+
         # Send the POST request with the SDP body (convert the dict to JSON)
         response = make_local_request(url, body=sdp, headers=headers)
-        
+
         # Check if the response is valid
         if response and response.status_code == 200:
             logging.debug(f"Recieved SDP: {response.text}")
             return response.text
         else:
-            raise ValueError(f"Failed to receive SDP Answer: {response.status_code if response else 'No response'}")
+            raise ValueError(
+                f"Failed to receive SDP Answer: {response.status_code if response else 'No response'}"
+            )
 
     except requests.exceptions.RequestException as e:
         # Handle any exceptions that occur during the request
         logging.error(f"An error occurred while sending the SDP: {e}")
         return None
+
 
 def send_sdp_to_local_peer_new_method(ip, sdp):
     try:
@@ -202,21 +216,21 @@ def send_sdp_to_local_peer_new_method(ip, sdp):
 
         # Initial request to get public key information
         response = make_local_request(url, body=None, headers=None)
-        
+
         # Check if the response status code is 200 (OK)
         if response:
             # Decode the response text from base64
-            decoded_response = base64.b64decode(response.text).decode('utf-8')
+            decoded_response = base64.b64decode(response.text).decode("utf-8")
             logging.debug(f"Recieved con_notify response: {decoded_response}")
 
             # Parse the decoded response as JSON
             decoded_json = json.loads(decoded_response)
-            
+
             # Extract the 'data1' field from the JSON
-            data1 = decoded_json.get('data1')
+            data1 = decoded_json.get("data1")
 
             # Extract the public key from 'data1'
-            public_key_pem = data1[10:len(data1)-10]
+            public_key_pem = data1[10 : len(data1) - 10]
             path_ending = _calc_local_path_ending(data1)
 
             # Generate AES key
@@ -235,7 +249,7 @@ def send_sdp_to_local_peer_new_method(ip, sdp):
             url = f"http://{ip}:9991/con_ing_{path_ending}"
 
             # Set the appropriate headers for URL-encoded form data
-            headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+            headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
             # Send the encrypted data via POST
             response = make_local_request(url, body=json.dumps(body), headers=headers)
@@ -243,7 +257,9 @@ def send_sdp_to_local_peer_new_method(ip, sdp):
             # If response is successful, decrypt it
             if response:
                 decrypted_response = aes_decrypt(response.text, aes_key)
-                logging.debug(f"Recieved con_ing_{path_ending} response: {decrypted_response}")
+                logging.debug(
+                    f"Recieved con_ing_{path_ending} response: {decrypted_response}"
+                )
                 return decrypted_response
         else:
             raise ValueError("Failed to receive initial public key response.")
@@ -260,5 +276,3 @@ def send_sdp_to_local_peer_new_method(ip, sdp):
         # Handle base64 decoding errors
         logging.error(f"An error occurred while decoding base64: {e}")
         return None
-
-

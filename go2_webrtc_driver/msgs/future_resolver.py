@@ -1,6 +1,6 @@
-import logging
 from ..constants import DATA_CHANNEL_TYPE
 from ..util import get_nested_field
+
 
 class FutureResolver:
     def __init__(self):
@@ -9,7 +9,7 @@ class FutureResolver:
         self.chunk_data_storage = {}
 
     def save_resolve(self, message_type, topic, future, identifier):
-        key = self.generate_message_key(message_type,topic,identifier)
+        key = self.generate_message_key(message_type, topic, identifier)
         if key in self.pending_callbacks:
             self.pending_callbacks[key].append(future)
         else:
@@ -19,17 +19,20 @@ class FutureResolver:
         if not message.get("type"):
             return
 
-        if message["type"] == DATA_CHANNEL_TYPE["RTC_INNER_REQ"] and get_nested_field(message, "info", "req_type") == "request_static_file":
+        if (
+            message["type"] == DATA_CHANNEL_TYPE["RTC_INNER_REQ"]
+            and get_nested_field(message, "info", "req_type") == "request_static_file"
+        ):
             self.run_resolve_for_topic_for_file(message)
             return
 
         key = self.generate_message_key(
             message["type"],
             message.get("topic", ""),
-            get_nested_field(message, "data", "uuid") or
-            get_nested_field(message, "data", "header", "identity", "id") or
-            get_nested_field(message, "info", "uuid") or
-            get_nested_field(message, "info", "req_uuid")
+            get_nested_field(message, "data", "uuid")
+            or get_nested_field(message, "data", "header", "identity", "id")
+            or get_nested_field(message, "info", "uuid")
+            or get_nested_field(message, "info", "req_uuid"),
         )
 
         content_info = get_nested_field(message, "data", "content_info")
@@ -51,7 +54,9 @@ class FutureResolver:
                 return
             else:
                 self.chunk_data_storage[key].append(data_chunk)
-                message["data"]["data"] = self.merge_array_buffers(self.chunk_data_storage[key])
+                message["data"]["data"] = self.merge_array_buffers(
+                    self.chunk_data_storage[key]
+                )
                 del self.chunk_data_storage[key]
 
         # Resolve the pending future with the final message
@@ -67,19 +72,19 @@ class FutureResolver:
 
         current_position = 0
         for buffer in buffers:
-            merged_buffer[current_position:current_position + len(buffer)] = buffer
+            merged_buffer[current_position : current_position + len(buffer)] = buffer
             current_position += len(buffer)
 
         return bytes(merged_buffer)
 
     def run_resolve_for_topic_for_file(self, message):
         key = self.generate_message_key(
-            message["type"], 
-            message.get("topic", ""), 
-            get_nested_field(message, "data", "uuid") or
-            get_nested_field(message, "data", "header", "identity", "id") or
-            get_nested_field(message, "info", "uuid") or
-            get_nested_field(message, "info", "req_uuid")
+            message["type"],
+            message.get("topic", ""),
+            get_nested_field(message, "data", "uuid")
+            or get_nested_field(message, "data", "header", "identity", "id")
+            or get_nested_field(message, "info", "uuid")
+            or get_nested_field(message, "info", "req_uuid"),
         )
 
         file_info = get_nested_field(message, "info", "file")
@@ -100,11 +105,15 @@ class FutureResolver:
                 self.chunk_data_storage[key] = []
 
             # Append the chunk to the storage, ensuring it's in bytes
-            self.chunk_data_storage[key].append(data_chunk.encode('utf-8') if isinstance(data_chunk, str) else data_chunk)
+            self.chunk_data_storage[key].append(
+                data_chunk.encode("utf-8")
+                if isinstance(data_chunk, str)
+                else data_chunk
+            )
 
             # If this is the last chunk, combine all chunks and store the complete data
             if chunk_index == total_chunks:
-                message["info"]["file"]["data"] = b''.join(self.chunk_data_storage[key])
+                message["info"]["file"]["data"] = b"".join(self.chunk_data_storage[key])
                 del self.chunk_data_storage[key]  # Clean up the storage
 
         # Resolve the pending future with the final message
@@ -116,5 +125,3 @@ class FutureResolver:
 
     def generate_message_key(self, message_type, topic, identifier):
         return identifier or f"{message_type} $ {topic}"
-
-

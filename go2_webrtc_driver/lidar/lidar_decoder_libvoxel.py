@@ -30,7 +30,6 @@ from wasmtime import ValType
 
 class LidarDecoder:
     def __init__(self) -> None:
-
         config = Config()
         config.wasm_multi_value = True
         config.debug_info = True
@@ -40,7 +39,9 @@ class LidarDecoder:
         self.module = Module.from_file(self.store.engine, wasm_path)
 
         self.a_callback_type = FuncType([ValType.i32()], [ValType.i32()])
-        self.b_callback_type = FuncType([ValType.i32(), ValType.i32(), ValType.i32()], [])
+        self.b_callback_type = FuncType(
+            [ValType.i32(), ValType.i32(), ValType.i32()], []
+        )
 
         a = Func(self.store, self.a_callback_type, self.adjust_memory_size)
         b = Func(self.store, self.b_callback_type, self.copy_memory_region)
@@ -58,13 +59,25 @@ class LidarDecoder:
         self.buffer_ptr = int.from_bytes(self.buffer, "little")
 
         self.HEAP8 = (ctypes.c_int8 * self.memory_size).from_address(self.buffer_ptr)
-        self.HEAP16 = (ctypes.c_int16 * (self.memory_size // 2)).from_address(self.buffer_ptr)
-        self.HEAP32 = (ctypes.c_int32 * (self.memory_size // 4)).from_address(self.buffer_ptr)
+        self.HEAP16 = (ctypes.c_int16 * (self.memory_size // 2)).from_address(
+            self.buffer_ptr
+        )
+        self.HEAP32 = (ctypes.c_int32 * (self.memory_size // 4)).from_address(
+            self.buffer_ptr
+        )
         self.HEAPU8 = (ctypes.c_uint8 * self.memory_size).from_address(self.buffer_ptr)
-        self.HEAPU16 = (ctypes.c_uint16 * (self.memory_size // 2)).from_address(self.buffer_ptr)
-        self.HEAPU32 = (ctypes.c_uint32 * (self.memory_size // 4)).from_address(self.buffer_ptr)
-        self.HEAPF32 = (ctypes.c_float * (self.memory_size // 4)).from_address(self.buffer_ptr)
-        self.HEAPF64 = (ctypes.c_double * (self.memory_size // 8)).from_address(self.buffer_ptr)
+        self.HEAPU16 = (ctypes.c_uint16 * (self.memory_size // 2)).from_address(
+            self.buffer_ptr
+        )
+        self.HEAPU32 = (ctypes.c_uint32 * (self.memory_size // 4)).from_address(
+            self.buffer_ptr
+        )
+        self.HEAPF32 = (ctypes.c_float * (self.memory_size // 4)).from_address(
+            self.buffer_ptr
+        )
+        self.HEAPF64 = (ctypes.c_double * (self.memory_size // 8)).from_address(
+            self.buffer_ptr
+        )
 
         self.input = self.malloc(self.store, 61440)
         self.decompressBuffer = self.malloc(self.store, 80000)
@@ -87,7 +100,7 @@ class LidarDecoder:
         for i in range(len(sublist)):
             if target + i < len(self.HEAPU8):
                 self.HEAPU8[target + i] = sublist[i]
-    
+
     def copy_memory_region(self, t, n, a):
         self.copy_within(t, n, n + a)
 
@@ -108,7 +121,7 @@ class LidarDecoder:
             return self.HEAPU32[t >> 2]
         else:
             raise ValueError(f"invalid type for getValue: {n}")
-        
+
     def add_value_arr(self, start, value):
         if start + len(value) <= len(self.HEAPU8):
             for i, byte in enumerate(value):
@@ -127,28 +140,28 @@ class LidarDecoder:
             len(compressed_data),
             self.decompressBufferSize,
             self.decompressBuffer,
-            self.decompressedSize, 
+            self.decompressedSize,
             self.positions,
             self.uvs,
-            self.indices,          
+            self.indices,
             self.faceCount,
-            self.pointCount,        
-            some_v
+            self.pointCount,
+            some_v,
         )
 
         self.get_value(self.decompressedSize, "i32")
         c = self.get_value(self.pointCount, "i32")
         u = self.get_value(self.faceCount, "i32")
 
-        positions_slice = self.HEAPU8[self.positions:self.positions + u * 12]
+        positions_slice = self.HEAPU8[self.positions : self.positions + u * 12]
         positions_copy = bytearray(positions_slice)
         p = np.frombuffer(positions_copy, dtype=np.uint8)
 
-        uvs_slice = self.HEAPU8[self.uvs:self.uvs + u * 8]
+        uvs_slice = self.HEAPU8[self.uvs : self.uvs + u * 8]
         uvs_copy = bytearray(uvs_slice)
         r = np.frombuffer(uvs_copy, dtype=np.uint8)
 
-        indices_slice = self.HEAPU8[self.indices:self.indices + u * 24]
+        indices_slice = self.HEAPU8[self.indices : self.indices + u * 24]
         indices_copy = bytearray(indices_slice)
         o = np.frombuffer(indices_copy, dtype=np.uint32)
 
@@ -157,5 +170,5 @@ class LidarDecoder:
             "face_count": u,
             "positions": p,
             "uvs": r,
-            "indices": o
+            "indices": o,
         }

@@ -3,7 +3,11 @@ name = "go2-webrtc-connect"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.9"
+authors = [
+    { name = "legion1581", email = "legion1581@gmail.com" },
+    { name = "phospho", email = "contact@phospho.ai" },
+]
 
 
 dependencies = [
@@ -19,6 +23,9 @@ dependencies = [
     "pydub",
     "loguru>=0.7.3",
 ]
+
+[dependency-groups]
+dev = ["ruff>=0.8.1", "mypy>=1.13.0", "types-requests>=2.32.0.20250306"]
 
 
 [build-system]

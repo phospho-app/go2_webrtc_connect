@@ -22,12 +22,11 @@
 import numpy as np
 import lz4.block
 
+
 def decompress(compressed_data, decomp_size):
-    decompressed = lz4.block.decompress(
-        compressed_data,
-        uncompressed_size=decomp_size
-    )
+    decompressed = lz4.block.decompress(compressed_data, uncompressed_size=decomp_size)
     return decompressed
+
 
 def bits_to_points(buf, origin, resolution=0.05):
     buf = np.frombuffer(bytearray(buf), dtype=np.uint8)
@@ -44,9 +43,10 @@ def bits_to_points(buf, origin, resolution=0.05):
         for bit_pos in range(8):
             if byte_value & (1 << (7 - bit_pos)):
                 x = x_base + bit_pos
-                points.append((x,y,z))
+                points.append((x, y, z))
 
     return np.array(points) * resolution + origin
+
 
 class LidarDecoder:
     def decode(self, compressed_data, data):
@@ -56,6 +56,6 @@ class LidarDecoder:
             return points
 
         return {
-                "points": points(),
-                # "raw": compressed_data,
+            "points": points(),
+            # "raw": compressed_data,
         }

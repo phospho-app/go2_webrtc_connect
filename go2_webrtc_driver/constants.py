@@ -18,10 +18,12 @@ DATA_CHANNEL_TYPE = {
     "ERRORS": "errors",
 }
 
+
 class WebRTCConnectionMethod(Enum):
     LocalAP = 1
     LocalSTA = 2
     Remote = 3
+
 
 app_error_messages = {
     "app_error_code_100_1": "DDS message timeout",
@@ -56,7 +58,7 @@ app_error_messages = {
     "app_error_source_600": "Motion Control",
     "app_error_wheel_300_100": "Motor Communication Interruption",
     "app_error_wheel_300_40": "Calibration Data Abnormality",
-    "app_error_wheel_300_80": "Abnormal Reset"
+    "app_error_wheel_300_80": "Abnormal Reset",
 }
 
 RTC_TOPIC = {
@@ -104,7 +106,7 @@ RTC_TOPIC = {
     "LIDAR_LOCALIZATION_CLOUD_POINT": "rt/uslam/localization/cloud_world",
     "PROGRAMMING_ACTUATOR_CMD": "rt/programming_actuator/command",
     "ASSISTANT_RECORDER": "rt/api/assistant_recorder/request",
-    "MOTION_SWITCHER": "rt/api/motion_switcher/request"
+    "MOTION_SWITCHER": "rt/api/motion_switcher/request",
 }
 
 SPORT_CMD = {
@@ -156,17 +158,19 @@ SPORT_CMD = {
     "StandOut": 1039,
     "FreeWalk": 1045,
     "Standup": 1050,
-    "CrossWalk": 1051
+    "CrossWalk": 1051,
 }
 
+
 class VUI_COLOR:
-    WHITE: str = 'white'
-    RED: str = 'red'
-    YELLOW: str = 'yellow'
-    BLUE: str = 'blue'
-    GREEN: str = 'green'
-    CYAN: str = 'cyan'
-    PURPLE: str = 'purple'
+    WHITE: str = "white"
+    RED: str = "red"
+    YELLOW: str = "yellow"
+    BLUE: str = "blue"
+    GREEN: str = "green"
+    CYAN: str = "cyan"
+    PURPLE: str = "purple"
+
 
 # Audio API IDs
 AUDIO_API = {
@@ -181,23 +185,19 @@ AUDIO_API = {
     "SELECT_RENAME": 1008,
     "SELECT_DELETE": 1009,
     "GET_PLAY_MODE": 1010,
-    
     # Audio Upload
     "UPLOAD_AUDIO_FILE": 2001,
-    
     # Internal Corpus
     "PLAY_START_OBSTACLE_AVOIDANCE": 3001,
     "PLAY_EXIT_OBSTACLE_AVOIDANCE": 3002,
     "PLAY_START_COMPANION_MODE": 3003,
     "PLAY_EXIT_COMPANION_MODE": 3004,
-    
     # Megaphone
     "ENTER_MEGAPHONE": 4001,
     "EXIT_MEGAPHONE": 4002,
     "UPLOAD_MEGAPHONE": 4003,
-    
     # Internal Long Corpus
     "INTERNAL_LONG_CORPUS_SELECT_TO_PLAY": 5001,
     "INTERNAL_LONG_CORPUS_PLAYBACK_COMPLETED": 5002,
-    "INTERNAL_LONG_CORPUS_STOP_PLAYING": 5003
+    "INTERNAL_LONG_CORPUS_STOP_PLAYING": 5003,
 }

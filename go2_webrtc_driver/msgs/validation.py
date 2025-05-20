@@ -2,6 +2,7 @@ import logging
 import base64
 from ..constants import DATA_CHANNEL_TYPE
 
+
 class WebRTCDataChannelValidaton:
     def __init__(self, channel, pub_sub):
         self.channel = channel
@@ -13,7 +14,7 @@ class WebRTCDataChannelValidaton:
         """Register a callback to be called upon validation."""
         if callback and callable(callback):
             self.on_validate_callbacks.append(callback)
-    
+
     async def handle_response(self, message):
         if message.get("data") == "Validation Ok.":
             logging.info("Validation succeed")
@@ -35,7 +36,6 @@ class WebRTCDataChannelValidaton:
                 self.encrypt_key(self.key),
                 DATA_CHANNEL_TYPE["VALIDATION"],
             )
-        
 
     @staticmethod
     def hex_to_base64(hex_str):
@@ -43,10 +43,11 @@ class WebRTCDataChannelValidaton:
         bytes_array = bytes.fromhex(hex_str)
         # Encode the bytes to Base64 and return as a string
         return base64.b64encode(bytes_array).decode("utf-8")
-    
+
     @staticmethod
     def encrypt_by_md5(input_str):
         import hashlib
+
         # Create an MD5 hash object
         hash_obj = hashlib.md5()
         # Update the hash object with the bytes of the input string
