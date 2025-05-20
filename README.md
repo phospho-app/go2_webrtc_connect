@@ -17,7 +17,7 @@ git clone --recurse-submodules https://github.com/legion1581/go2_webrtc_connect.
 cd go2_webrtc_connect
 ```
 
-2. We'll use [uv](https://github.com/astral-sh/uv) to manage python dependencies. Make sure it's installed.
+2. We use [uv](https://github.com/astral-sh/uv) to manage python dependencies. Make sure it's installed.
 
 ```bash
 # On macOS and Linux.
