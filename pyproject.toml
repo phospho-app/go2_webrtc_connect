@@ -22,6 +22,7 @@ dependencies = [
     "lz4",
     "pydub",
     "loguru>=0.7.3",
+    "aioice",
 ]
 
 [dependency-groups]
