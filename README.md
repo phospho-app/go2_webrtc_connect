@@ -10,26 +10,14 @@ This repository contains a Python implementation of the WebRTC driver to connect
 
 ## Installation
 
-1. Clone this repository.
-
 ```bash
-git clone --recurse-submodules https://github.com/legion1581/go2_webrtc_connect.git
-cd go2_webrtc_connect
+pip install go2-webrtc-connect
 ```
 
-2. We use [uv](https://github.com/astral-sh/uv) to manage python dependencies. Make sure it's installed.
+For audio and video:
 
 ```bash
-# On macOS and Linux.
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-3. Turn on the Go2. Get the IP of your Go2 using the Unitree Go2 app. Then, close the app and disconnect from your dog. Change the scripts to put your Go2 IP address.
-
-Then, run scripts using `uv`.
-
-```bash
-uv run examples/data_channel/lowstate/lowstate.py
+pip install "go2-webrtc-connect[audio,video]"
 ```
 
 ## Supported Firmware Versions
