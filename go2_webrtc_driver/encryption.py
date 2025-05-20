@@ -1,9 +1,9 @@
-from Crypto.Cipher import AES
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_v1_5
 import base64
-import uuid
 import binascii
+import uuid
+
+from Crypto.Cipher import AES, PKCS1_v1_5
+from Crypto.PublicKey import RSA
 
 ###############
 ### AES handling

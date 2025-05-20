@@ -1,6 +1,8 @@
 import logging
-from .webrtc_datachannel import WebRTCDataChannel
+
 from aiortc import RTCPeerConnection
+
+from .webrtc_datachannel import WebRTCDataChannel
 
 
 class WebRTCVideoChannel:

@@ -2,11 +2,13 @@ import hashlib
 import json
 import logging
 import random
-import requests
 import time
+
+import requests
 from Crypto.PublicKey import RSA
+
+from .encryption import aes_decrypt, generate_aes_key, rsa_encrypt, rsa_load_public_key
 from .unitree_auth import make_remote_request
-from .encryption import rsa_encrypt, rsa_load_public_key, aes_decrypt, generate_aes_key
 
 
 def _generate_md5(string: str) -> str:

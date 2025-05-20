@@ -1,21 +1,21 @@
-import asyncio
-import logging
 import json
+import logging
 import sys
+
 from aiortc import (
+    RTCConfiguration,
+    RTCIceServer,
     RTCPeerConnection,
     RTCSessionDescription,
-    RTCIceServer,
-    RTCConfiguration,
 )
-from aiortc.contrib.media import MediaPlayer
-from .unitree_auth import send_sdp_to_local_peer, send_sdp_to_remote_peer
-from .webrtc_datachannel import WebRTCDataChannel
-from .webrtc_audio import WebRTCAudioChannel
-from .webrtc_video import WebRTCVideoChannel
-from .constants import DATA_CHANNEL_TYPE, WebRTCConnectionMethod
-from .util import fetch_public_key, fetch_token, fetch_turn_server_info, print_status
+
+from .constants import WebRTCConnectionMethod
 from .multicast_scanner import discover_ip_sn
+from .unitree_auth import send_sdp_to_local_peer, send_sdp_to_remote_peer
+from .util import fetch_public_key, fetch_token, fetch_turn_server_info, print_status
+from .webrtc_audio import WebRTCAudioChannel
+from .webrtc_datachannel import WebRTCDataChannel
+from .webrtc_video import WebRTCVideoChannel
 
 # # Enable logging for debugging
 # logging.basicConfig(level=logging.INFO)

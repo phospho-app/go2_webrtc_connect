@@ -1,14 +1,16 @@
-import logging
-import json
+import asyncio
 import base64
+import hashlib
+import json
+import logging
+import os
 import time
 import uuid
-import os
-import hashlib
+
 from pydub import AudioSegment
+
 from go2_webrtc_driver.constants import AUDIO_API
 from go2_webrtc_driver.webrtc_driver import Go2WebRTCConnection
-import asyncio
 
 CHUNK_SIZE = 61440
 

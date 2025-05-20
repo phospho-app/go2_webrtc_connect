@@ -1,6 +1,7 @@
 import asyncio
-import logging
 import base64
+import logging
+
 from ..constants import DATA_CHANNEL_TYPE, WebRTCConnectionMethod
 from ..util import generate_uuid
 

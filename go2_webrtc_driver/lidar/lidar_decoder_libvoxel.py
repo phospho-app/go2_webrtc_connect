@@ -19,13 +19,12 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import math
 import ctypes
-import numpy as np
+import math
 import os
 
-from wasmtime import Config, Engine, Store, Module, Instance, Func, FuncType
-from wasmtime import ValType
+import numpy as np
+from wasmtime import Config, Engine, Func, FuncType, Instance, Module, Store, ValType
 
 
 class LidarDecoder:

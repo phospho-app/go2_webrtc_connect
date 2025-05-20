@@ -1,7 +1,7 @@
-import socket
-import struct
 import json
 import logging
+import socket
+import struct
 
 RECV_PORT = 10134  # Port where the devices will send the multicast responses
 MULTICAST_GROUP = "231.1.1.1"  # Multicast group IP address
