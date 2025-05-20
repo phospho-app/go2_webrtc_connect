@@ -4,7 +4,7 @@ import numpy as np
 # Create an OpenCV window and display a blank image
 height, width = 720, 1280  # Adjust the size as needed
 img = np.zeros((height, width, 3), dtype=np.uint8)
-cv2.imshow('Video', img)
+cv2.imshow("Video", img)
 cv2.waitKey(1)  # Ensure the window is created
 
 import asyncio
@@ -18,11 +18,12 @@ from aiortc import MediaStreamTrack
 # Enable logging for debugging
 logging.basicConfig(level=logging.FATAL)
 
+
 def main():
     frame_queue = Queue()
 
     # Choose a connection method (uncomment the correct one)
-    conn = Go2WebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.8.181")
+    conn = Go2WebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.1.42")
     # conn = Go2WebRTCConnection(WebRTCConnectionMethod.LocalSTA, serialNumber="B42D2000XXXXXXXX")
     # conn = Go2WebRTCConnection(WebRTCConnectionMethod.Remote, serialNumber="B42D2000XXXXXXXX", username="email@gmail.com", password="pass")
     # conn = Go2WebRTCConnection(WebRTCConnectionMethod.LocalAP)
@@ -37,6 +38,7 @@ def main():
 
     def run_asyncio_loop(loop):
         asyncio.set_event_loop(loop)
+
         async def setup():
             try:
                 # Connect to the device
@@ -65,10 +67,12 @@ def main():
         while True:
             if not frame_queue.empty():
                 img = frame_queue.get()
-                print(f"Shape: {img.shape}, Dimensions: {img.ndim}, Type: {img.dtype}, Size: {img.size}")
+                print(
+                    f"Shape: {img.shape}, Dimensions: {img.ndim}, Type: {img.dtype}, Size: {img.size}"
+                )
                 # Display the frame
-                cv2.imshow('Video', img)
-                if cv2.waitKey(1) & 0xFF == ord('q'):
+                cv2.imshow("Video", img)
+                if cv2.waitKey(1) & 0xFF == ord("q"):
                     break
             else:
                 # Sleep briefly to prevent high CPU usage
@@ -78,6 +82,7 @@ def main():
         # Stop the asyncio event loop
         loop.call_soon_threadsafe(loop.stop)
         asyncio_thread.join()
+
 
 if __name__ == "__main__":
     main()
