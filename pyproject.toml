@@ -13,19 +13,17 @@ authors = [
 dependencies = [
     "aiortc==1.9.0",
     "pycryptodome",
-    "opencv-python",
-    "sounddevice",
-    "pyaudio",
     "requests",
     "wasmtime",
     "flask-socketio",
     "lz4",
-    "pydub",
+    "numpy",
 ]
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = ["ruff>=0.8.1", "mypy>=1.13.0", "types-requests>=2.32.0.20250306"]
-
+audio = ["sounddevice", "pyaudio", "pydub"]
+video = ["opencv-python-headless"]
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
