@@ -1,5 +1,5 @@
 import json
-from loguru import logger as logging
+import logging
 import sys
 
 from aiortc import (

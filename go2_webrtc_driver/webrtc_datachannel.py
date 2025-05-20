@@ -3,7 +3,7 @@ import json
 import struct
 import sys
 
-from loguru import logger as logging
+import logging
 
 from .constants import DATA_CHANNEL_TYPE
 from .lidar.lidar_decoder_unified import UnifiedLidarDecoder

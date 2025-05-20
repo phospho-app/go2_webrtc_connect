@@ -3,7 +3,7 @@ import json
 import random
 import time
 
-from loguru import logger as logging
+import logging
 
 from ..constants import DATA_CHANNEL_TYPE
 from ..util import get_nested_field

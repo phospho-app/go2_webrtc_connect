@@ -3,7 +3,7 @@ name = "go2-webrtc-connect"
 version = "0.1.0"
 description = "Connect to the Unitree Go2 with WebRTC"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 authors = [
     { name = "legion1581", email = "legion1581@gmail.com" },
     { name = "phospho", email = "contact@phospho.ai" },
@@ -21,7 +21,6 @@ dependencies = [
     "flask-socketio",
     "lz4",
     "pydub",
-    "loguru>=0.7.3",
 ]
 
 [dependency-groups]
