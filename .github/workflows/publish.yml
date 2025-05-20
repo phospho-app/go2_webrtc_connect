@@ -1,0 +1,26 @@
+# This workflow will upload a Python Package using uv
+name: Publish to PyPI
+
+on:
+  release:
+    types: [released]
+
+permissions:
+  contents: read
+  # IMPORTANT: this permission is mandatory for Trusted Publishing
+  id-token: write
+
+jobs:
+  publish_phospho_python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build
+        run: uv build
+
+      - name: Publish to PyPI
+        run: uv publish
