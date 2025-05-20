@@ -10,14 +10,44 @@ This repository contains a Python implementation of the WebRTC driver to connect
 
 ## Installation
 
-1. Clone this repository **with submodules**. If you get the error **Data channel did not open in time**, you likely didn't clone submodules.
+1. Clone this repository.
 
 ```bash
 git clone --recurse-submodules https://github.com/legion1581/go2_webrtc_connect.git
 cd go2_webrtc_connect
 ```
 
-2. (Optional) Install `portaudio19-dev`. This is only used for sound capabilities for Go2 Pro and Edu.
+2. We'll use [uv](https://github.com/astral-sh/uv) to manage python dependencies. Make sure it's installed.
+
+```bash
+# On macOS and Linux.
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+3. Turn on the Go2. Get the IP of your Go2 using the Unitree Go2 app. Then, close the app and disconnect from your dog. Change the scripts to put your Go2 IP address.
+
+Then, run scripts using `uv`.
+
+```bash
+uv run examples/data_channel/lowstate/lowstate.py
+```
+
+## Supported Firmware Versions
+
+The currently supported Go2 firmware packages are:
+
+- 1.1.1 - 1.1.4 (latest available)
+- 1.0.19 - 1.0.25
+
+Use the Unitree Go2 app to check your firmware version.
+
+## Audio Support
+
+There is an audio (sendrecv) channel in WebRTC that you can connect to.
+
+This is supported only on Go2 Pro and Edu. Check out the examples in the `/examples/audio` folder.
+
+1. Install `portaudio19-dev`.
 
 ```bash
 # On Linux
@@ -29,37 +59,23 @@ sudo apt update && sudo apt install portaudio19-dev
 brew update && brew install portaudio19-dev
 ```
 
-3. We'll use [uv](https://github.com/astral-sh/uv) to manage python dependencies. Make sure it's installed.
+2. Use the `audio` optional dependencies
 
 ```bash
-# On macOS and Linux.
-curl -LsSf https://astral.sh/uv/install.sh | sh
+uv run --extra audio  examples/audio/mp3_player/play_mp3.py
 ```
 
-4. Turn on the Go2. Get the IP of your Go2 using the Unitree Go2 app. Then, close the app and disconnect from your dog. Change the scripts to put your Go2 IP address.
+## Video Support
 
-Then, run scripts using `uv`.
+There is video (recvonly) channel in WebRTC. Use the `video` optional dependencies for this.
 
 ```bash
-uv run examples/data_channel/lowstate/lowstate.py
+uv run --extra audio  examples/audio/mp3_player/play_mp3.py
 ```
-
-## Supported Versions
-
-The currently supported Go2 firmware packages are:
-
-- 1.1.1 - 1.1.4 (latest available)
-- 1.0.19 - 1.0.25
-
-Use the Unitree Go2 app to check your firmware version.
-
-## Audio and Video Support
-
-There are video (recvonly) and audio (sendrecv) channels in WebRTC that you can connect to. Check out the examples in the `/example` folder.
 
 ## Lidar support
 
-There is a lidar decoder built in, so you can handle decoded PoinClouds directly. Check out the examples in the `/example` folder.
+There is a lidar decoder built in, so you can handle decoded PoinClouds directly. Check out the examples in the `/examples/data_channel/lidar` folder.
 
 ## Connection Methods
 
@@ -95,7 +111,7 @@ The driver has a built-in Multicast scanner to find the Unitree Go2 on the local
 
 ## Usage
 
-Example programs are located in the /example directory.
+Example programs are located in the /examples directory.
 
 ### Thanks
 
