@@ -199,7 +199,7 @@ def send_sdp_to_local_peer_old_method(ip, sdp):
 
         # Check if the response is valid
         if response and response.status_code == 200:
-            logging.debug(f"Recieved SDP: {response.text}")
+            logging.debug(f"Received SDP: {response.text}")
             return response.text
         else:
             raise ValueError(
@@ -223,7 +223,7 @@ def send_sdp_to_local_peer_new_method(ip, sdp):
         if response:
             # Decode the response text from base64
             decoded_response = base64.b64decode(response.text).decode("utf-8")
-            logging.debug(f"Recieved con_notify response: {decoded_response}")
+            logging.debug(f"Received con_notify response: {decoded_response}")
 
             # Parse the decoded response as JSON
             decoded_json = json.loads(decoded_response)
@@ -260,7 +260,7 @@ def send_sdp_to_local_peer_new_method(ip, sdp):
             if response:
                 decrypted_response = aes_decrypt(response.text, aes_key)
                 logging.debug(
-                    f"Recieved con_ing_{path_ending} response: {decrypted_response}"
+                    f"Received con_ing_{path_ending} response: {decrypted_response}"
                 )
                 return decrypted_response
         else:

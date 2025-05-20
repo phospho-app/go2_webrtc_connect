@@ -1,5 +1,5 @@
 import json
-import logging
+from loguru import logger as logging
 import sys
 
 from aiortc import (
@@ -165,7 +165,7 @@ class Go2WebRTCConnection:
 
         @self.pc.on("track")
         async def on_track(track):
-            logging.info("Track recieved: %s", track.kind)
+            logging.info(f"Track received: {track.kind}")
 
             if track.kind == "video":
                 # await for the first frame, #ToDo make the code more nicer
@@ -222,7 +222,7 @@ class Go2WebRTCConnection:
             "token": self.token,
         }
 
-        logging.debug("Local SDP created: %s", sdp_offer_json)
+        logging.debug(f"Local SDP created: {sdp_offer_json}")
 
         peer_answer_json = send_sdp_to_remote_peer(
             self.sn, json.dumps(sdp_offer_json), self.token, self.public_key
