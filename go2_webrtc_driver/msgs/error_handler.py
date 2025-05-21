@@ -68,7 +68,7 @@ def get_error_source_text(error_source):
         return f"{error_source}"
 
 
-def handle_error(message):
+def handle_error(message: dict):
     """
     Handle the error message, print the time, error source, and error message.
 
@@ -76,6 +76,9 @@ def handle_error(message):
         message (dict): The error message containing the data field.
     """
     data = message["data"]
+
+    if not isinstance(data, list):
+        data = [data]
 
     for error in data:
         timestamp, error_source, error_code_int = error
