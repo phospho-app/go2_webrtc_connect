@@ -1,6 +1,6 @@
 [project]
 name = "go2-webrtc-connect"
-version = "0.1.1"
+version = "0.1.2"
 description = "Connect to the Unitree Go2 with WebRTC"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -32,3 +32,18 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
+include = ["*"]
+exclude = [
+    "tests",
+    "tests.*",
+    "docs",
+    "docs.*",
+    "examples",
+    "examples.*",
+    "__pycache__",
+    "__pycache__.*",
+]
+
+[tool.setuptools]
+# include data files as listed in MANIFEST.in
+include-package-data = true
