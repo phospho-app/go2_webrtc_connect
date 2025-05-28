@@ -81,6 +81,10 @@ def handle_error(message: dict):
         data = [data]
 
     for error in data:
+        if not isinstance(error, tuple) or len(error) != 3:
+            print("Received malformed error message:", error)
+            continue
+
         timestamp, error_source, error_code_int = error
 
         # Convert the timestamp to human-readable format
