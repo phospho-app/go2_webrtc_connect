@@ -3,7 +3,7 @@ name = "go2-webrtc-connect"
 version = "0.2.0"
 description = "Connect to the Unitree Go2 with WebRTC"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.8"
 authors = [
     { name = "legion1581", email = "legion1581@gmail.com" },
     { name = "phospho", email = "contact@phospho.ai" },
@@ -22,7 +22,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["ruff>=0.8.1", "mypy>=1.13.0", "types-requests>=2.32.0.20250306"]
+dev = ["ruff>=0.8.1", "mypy>=1.13.0", "types-requests>=2.32"]
 audio = ["sounddevice", "pyaudio", "pydub"]
 video = ["opencv-python-headless"]
 
