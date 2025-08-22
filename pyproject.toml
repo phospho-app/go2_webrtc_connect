@@ -1,6 +1,6 @@
 [project]
 name = "go2-webrtc-connect"
-version = "0.2.0"
+version = "0.2.1"
 description = "Connect to the Unitree Go2 with WebRTC"
 readme = "README.md"
 requires-python = ">=3.8"
